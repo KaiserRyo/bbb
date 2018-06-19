@@ -23,6 +23,9 @@ sub new {
 sub archives {
 	my ($self) = @_;
 
+	my $ref = $self->{root}->{QnxOSDevice}->{Archives}->{Archive};
+	my $arr_ref = ref($ref) eq 'ARRAY' ? $ref : [$ref];
+
 	return $self->calculate_files(map {
 		{
 			size => $_->{bytesize}->{value},
@@ -31,7 +34,7 @@ sub archives {
 			name => $_->{name}->{value},
 			type => $_->{type}->{value},
 		};
-	} @{$self->{root}->{QnxOSDevice}->{Archives}->{Archive}});
+	} @$arr_ref);
 }
 
 sub calculate_files {
