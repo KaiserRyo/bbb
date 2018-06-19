@@ -167,7 +167,7 @@ sub backup {
 	for (1..10) {
 		my $uri = URI->new("https://$self->{ip}/cgi-bin/backup.cgi");
 		$uri->query_form({
-			mode => 'app',
+			mode => 'app_media_settings',
 			opt => 'rev2',
 		});
 		my $req = POST $uri->as_string;
