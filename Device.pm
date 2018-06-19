@@ -223,22 +223,27 @@ HEAD
 	for my $f (@items) {
 		my $backup_uri = URI->new("https://$self->{ip}/cgi-bin/backup.cgi");
 		my %query;
+		my $filename;
+
 		if ($f->{pkgid} eq 'systemapps' || $f->{type} ~~ ['bin', 'data']) {
 			$query{type} = 'app';
 			if ($f->{type} ~~ ['bin', 'data']) {
 				$query{pkgid} = $f->{pkgid};
 				$query{pkgtype} = $f->{type};
 			}
+			$filename = "$f->{pkgid}.$f->{category}.$f->{type}";
 		} elsif ($f->{pkgid} eq 'media') {
 			$query{type} = 'media';
+			$filename = 'media.tar';
 		} elsif ($f->{pkgid} eq 'settings') {
 			$query{type} = 'settings';
+			$filename = 'settings.tar';
 		} else {
 			die "Unknown backup type for $f->{pkgid}";
 		}
 		$backup_uri->query_form(\%query);
 
-		my $res = $ua->get($backup_uri->as_string, ':content_file' => "$options->{dir}/Archive/$f->{pkgid}.$f->{category}.$f->{type}");
+		my $res = $ua->get($backup_uri->as_string, ':content_file' => "$options->{dir}/Archive/$filename");
 		if (!$res->is_success) {
 			say $res->decoded_content;
 			return;
